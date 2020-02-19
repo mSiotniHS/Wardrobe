@@ -2,7 +2,7 @@
 My first pet project on GitHub.
 
 ## What is that thing?
-This is the app which helps people organize their wardrobe (basically it's virtual version of your wardrobe). You take picture of your clothes, add some metadata and voilà! You also can combine clothes to the "looks".
+This is the app which helps people organize their wardrobe (basically it's virtual version of your wardrobe). You take picture of your clothes, add some metadata and voilà! You can also combine clothes to the "looks".
 
 ## How did you come up with this app?
 One day I realized I have many clothes and they are not orgasized! That's how I came up with such great (I think) idea.
