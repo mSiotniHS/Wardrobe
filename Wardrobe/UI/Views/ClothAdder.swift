@@ -14,42 +14,61 @@ struct ClothAdder: View {
     
     var managedObjectContext: NSManagedObjectContext
     
-    @State private var label = ""
-    @State private var brand = ""
-    @State private var color = ""
+    @State private var label          = ""
+    @State private var brand          = ""
+    @State private var color          = ""
+    @State private var typeIndex      = 0
+    private var type: String {
+        ClothType(rawValue: typeIndex)!.description
+    }
+    @State private var imageName      = ""
     
-    var fieldsAreFilled: Bool {
+    private var fieldsAreFilled: Bool {
         self.label != "" && self.brand != "" && self.color != ""
     }
     
-    var dismissButton: some View {
+    private var dismissButton: some View {
         Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
             Text("Cancel")
         }
     }
     
+    func saveData() {
+        let cloth = Cloth(context: self.managedObjectContext)
+        
+        cloth.id    = UUID()
+        cloth.label = self.label
+        cloth.brand = self.brand
+        cloth.color = self.color
+        cloth.type  = self.type
+        
+        do {
+            try self.managedObjectContext.save()
+        } catch {
+            print("Tried to save object. Error: \(error)")
+        }
+        
+        self.presentationMode.wrappedValue.dismiss()
+    }
+    
     var body: some View {
         NavigationView {
             VStack {
-                TextField("Label", text: self.$label)
-                TextField("Brand", text: self.$brand)
-                TextField("Color", text: self.$color)
-                
+                Form {
+                    TextField("Label", text: self.$label)
+                    TextField("Brand", text: self.$brand)
+                    TextField("Color", text: self.$color)
+//                  BUG: when typing text, Picker is "blinking"
+                    Picker("Styles", selection: $typeIndex) {
+                        ForEach(0 ..< 3) { index in
+                            Text(ClothType(rawValue: index)!.description).tag(index)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }
                 Spacer()
                 
-                Button(action: {
-                    let cloth = Cloth(context: self.managedObjectContext)
-                    
-                    cloth.label = self.label
-                    cloth.brand = self.brand
-                    cloth.color = self.color
-                    
-                    do {
-                        try self.managedObjectContext.save()
-                    } catch {
-                        print("Tried to save object. Error: \(error)")
-                    }
-                }) {
+                Button(action: { self.saveData() }) {
                     Text("Add")
                         .fontWeight(.bold)
                         .foregroundColor(.white)
@@ -59,10 +78,23 @@ struct ClothAdder: View {
                         .cornerRadius(20)
                 }
                 .disabled(!fieldsAreFilled)
+                
             }
             .navigationBarTitle(Text("Add new cloth"), displayMode: .inline)
             .navigationBarItems(trailing: dismissButton)
         }
+    }
+}
+
+enum ClothType: Int, CustomStringConvertible {
+    case body, legs, shoes
+    
+    var description : String {
+      switch self {
+      case .body  : return "body"
+      case .legs  : return "legs"
+      case .shoes : return "shoes"
+      }
     }
 }
 

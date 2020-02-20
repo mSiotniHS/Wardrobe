@@ -10,13 +10,13 @@ import Foundation
 import CoreData
 
 public class Cloth: NSManagedObject, Identifiable {
-//    @NSManaged public var id: UUID
+    @NSManaged public var id        : UUID?
     
     @NSManaged public var label     : String?
     @NSManaged public var brand     : String?
-//    @NSManaged var type      : String
+    @NSManaged var type             : String?
     @NSManaged public var color     : String?
-//    @NSManaged var imageName : String
+    @NSManaged var imageName        : String?
 }
 
 extension Cloth {

@@ -3,9 +3,12 @@
     <entity name="Cloth" representedClassName=".Cloth" syncable="YES">
         <attribute name="brand" optional="YES" attributeType="String"/>
         <attribute name="color" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="imageName" optional="YES" attributeType="String"/>
         <attribute name="label" optional="YES" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Cloth" positionX="-63" positionY="-18" width="128" height="88"/>
+        <element name="Cloth" positionX="-63" positionY="-18" width="128" height="133"/>
     </elements>
 </model>

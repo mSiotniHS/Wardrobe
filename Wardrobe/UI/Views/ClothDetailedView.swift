@@ -21,7 +21,8 @@ struct ClothDetailedView: View {
 //                    .listRowInsets(EdgeInsets())
                 Text(cloth.label!).font(.largeTitle)
                 Text("Brand: \(cloth.brand!)")
-//                Text("Type: \(cloth.type)")
+                Text("Type: \(cloth.type!.description)")
+                Text("UUID: \(cloth.id!)")
             }
         }
     }
