@@ -25,16 +25,32 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List(self.clothes) { cloth in
-                NavigationLink(destination: ClothDetailedView(cloth: cloth)) {
-                    ClothItem(cloth: cloth)
+            List {
+                ForEach(self.clothes) { cloth in
+                    NavigationLink(destination: ClothDetailedView(cloth: cloth)) {
+                        ClothItem(cloth: cloth)
+                    }
                 }
+                .onDelete(perform: deleteCloth)
             }
             .navigationBarTitle(Text("Clothes"))
             .navigationBarItems(trailing: addButton)
             .sheet(isPresented: self.$showAdder) {
                 ClothAdder(managedObjectContext: self.managedObjectContext)
             }
+        }
+    }
+    
+    private func deleteCloth(at offsets: IndexSet) {
+        for index in offsets {
+            let cloth = clothes[index]
+            managedObjectContext.delete(cloth)
+        }
+        
+        do {
+            try managedObjectContext.save()
+        } catch {
+            print("Tried to delete object. An error occured: \(error)")
         }
     }
 }

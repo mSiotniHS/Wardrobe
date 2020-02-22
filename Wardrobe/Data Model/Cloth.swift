@@ -16,7 +16,7 @@ public class Cloth: NSManagedObject, Identifiable {
     @NSManaged public var brand     : String?
     @NSManaged var type             : String?
     @NSManaged public var color     : String?
-    @NSManaged var imageName        : String?
+    @NSManaged var image            : NSData?
 }
 
 extension Cloth {

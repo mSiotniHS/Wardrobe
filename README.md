@@ -17,3 +17,6 @@ I am 100% sure you have clothes. This is enough.
 - CoreData
 
 Hope this project will become something great. Stay tuned!
+
+P.S.
+Yeah, by the way, don't tell me that "cloth" is not "a single piece of clothes". I know that. I just needed it for the app architecture.

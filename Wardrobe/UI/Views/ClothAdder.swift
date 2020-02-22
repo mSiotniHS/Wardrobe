@@ -14,23 +14,33 @@ struct ClothAdder: View {
     
     var managedObjectContext: NSManagedObjectContext
     
-    @State private var label          = ""
-    @State private var brand          = ""
-    @State private var color          = ""
-    @State private var typeIndex      = 0
-    private var type: String {
-        ClothType(rawValue: typeIndex)!.description
-    }
-    @State private var imageName      = ""
+    @State private var label     = ""
+    @State private var brand     = ""
+    @State private var color     = ""
+    @State private var typeIndex = 0
+    @State private var imageName = ""
     
     private var fieldsAreFilled: Bool {
-        self.label != "" && self.brand != "" && self.color != ""
+        self.label != "" &&
+        self.brand != "" &&
+        self.color != ""
     }
     
     private var dismissButton: some View {
         Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
             Text("Cancel")
         }
+    }
+    
+    @State private var showActionSheet : Bool   = false
+    @State private var showImagePicker : Bool   = false
+    @State private var image           : Image? = nil
+    private var pictureSourceActionSheet: ActionSheet {
+        ActionSheet(title: Text("Choose the source of picture"), buttons: [
+            .default(Text("Camera")),
+            .default(Text("Gallery")) { self.showImagePicker.toggle() },
+            .cancel(Text("Cancel")),
+        ])
     }
     
     func saveData() {
@@ -40,7 +50,7 @@ struct ClothAdder: View {
         cloth.label = self.label
         cloth.brand = self.brand
         cloth.color = self.color
-        cloth.type  = self.type
+        cloth.type  = ClothType.types[typeIndex]
         
         do {
             try self.managedObjectContext.save()
@@ -58,13 +68,18 @@ struct ClothAdder: View {
                     TextField("Label", text: self.$label)
                     TextField("Brand", text: self.$brand)
                     TextField("Color", text: self.$color)
-//                  BUG: when typing text, Picker is "blinking"
-                    Picker("Styles", selection: $typeIndex) {
-                        ForEach(0 ..< 3) { index in
-                            Text(ClothType(rawValue: index)!.description).tag(index)
+                    Picker("Styles", selection: $typeIndex) { // BUG: when typing text, Picker is "blinking"
+                        ForEach(0 ..< ClothType.types.count) { index in
+                            Text(ClothType.typesForHuman[index]).tag(index)
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
+                    Button(action: { self.showActionSheet.toggle() }) { Text(self.image == nil ? "Add photo" : "Change photo") }
+                    if (self.image != nil) {
+                        self.image!
+                            .resizable()
+                            .scaledToFit()
+                    }
                 }
                 Spacer()
                 
@@ -83,23 +98,22 @@ struct ClothAdder: View {
             .navigationBarTitle(Text("Add new cloth"), displayMode: .inline)
             .navigationBarItems(trailing: dismissButton)
         }
+        .actionSheet(isPresented: $showActionSheet) { self.pictureSourceActionSheet }
+        .sheet(isPresented: self.$showImagePicker) {
+            ImagePickerWrapper(showImagePicker: self.$showImagePicker, image: self.$image)
+        }
     }
 }
 
-enum ClothType: Int, CustomStringConvertible {
-    case body, legs, shoes
-    
-    var description : String {
-      switch self {
-      case .body  : return "body"
-      case .legs  : return "legs"
-      case .shoes : return "shoes"
-      }
+struct ClothType {
+    static var types         : [String] = ["head", "body", "legs", "shoes"]
+    static var typesForHuman : [String] {
+        self.types.map { String($0.prefix(1)).uppercased() + $0.dropFirst() }
     }
 }
 
 //struct ClothAdder_Previews: PreviewProvider {
 //    static var previews: some View {
-//        ClothAdder(showModal: true)
+//        ClothAdder()
 //    }
 //}
