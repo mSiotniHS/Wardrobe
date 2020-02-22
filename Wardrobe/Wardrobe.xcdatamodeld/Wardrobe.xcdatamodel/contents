@@ -7,8 +7,17 @@
         <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="label" optional="YES" attributeType="String"/>
         <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="looks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Look" inverseName="clothes" inverseEntity="Look"/>
+    </entity>
+    <entity name="Look" representedClassName=".Look" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="label" optional="YES" attributeType="String"/>
+        <attribute name="season" optional="YES" attributeType="String"/>
+        <attribute name="style" optional="YES" attributeType="String"/>
+        <relationship name="clothes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Cloth" inverseName="looks" inverseEntity="Cloth"/>
     </entity>
     <elements>
-        <element name="Cloth" positionX="-63" positionY="-18" width="128" height="133"/>
+        <element name="Cloth" positionX="-1473.8984375" positionY="-52.51953125" width="132.3984375" height="148"/>
+        <element name="Look" positionX="-2122.4453125" positionY="466.1484375" width="128" height="118"/>
     </elements>
 </model>

@@ -10,47 +10,20 @@ import SwiftUI
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @FetchRequest(fetchRequest: Cloth.getAllClothes()) var clothes: FetchedResults<Cloth>
-    
-    @State var showAdder = false
-    
-    var addButton: some View {
-        Button(action: { self.showAdder.toggle() }) {
-            Image(systemName: "plus.circle")
-                .imageScale(.large)
-                .accessibility(label: Text("Add cloth"))
-                .padding()
-        }
-    }
     
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(self.clothes) { cloth in
-                    NavigationLink(destination: ClothDetailedView(cloth: cloth)) {
-                        ClothItem(cloth: cloth)
-                    }
+        TabView {
+            ClothesView(managedObjectContext: managedObjectContext)
+                .tabItem {
+                    Image(systemName: "command")
+                    Text("Clothes")
                 }
-                .onDelete(perform: deleteCloth)
-            }
-            .navigationBarTitle(Text("Clothes"))
-            .navigationBarItems(trailing: addButton)
-            .sheet(isPresented: self.$showAdder) {
-                ClothAdder(managedObjectContext: self.managedObjectContext)
-            }
-        }
-    }
-    
-    private func deleteCloth(at offsets: IndexSet) {
-        for index in offsets {
-            let cloth = clothes[index]
-            managedObjectContext.delete(cloth)
-        }
-        
-        do {
-            try managedObjectContext.save()
-        } catch {
-            print("Tried to delete object. An error occured: \(error)")
+            
+            LooksView(managedObjectContext: managedObjectContext)
+                .tabItem {
+                    Image(systemName: "option")
+                    Text("Looks")
+                }
         }
     }
 }
