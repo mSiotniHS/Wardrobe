@@ -14,11 +14,12 @@ struct ClothAdder: View {
     
     var managedObjectContext: NSManagedObjectContext
     
-    @State private var label     : String   = ""
-    @State private var brand     : String   = ""
-    @State private var color     : String   = ""
-    @State private var typeIndex : Int      = 0
-    @State private var image     : UIImage? = nil
+    @State private var label       : String   = ""
+    @State private var brand       : String   = ""
+    @State private var color       : String   = ""
+    @State private var typeIndex   : Int      = 0
+    @State private var image       : UIImage? = nil
+    @State private var imageSource : UIImagePickerController.SourceType? = nil
     
     private var fieldsAreFilled: Bool {
         self.label != "" &&
@@ -38,8 +39,8 @@ struct ClothAdder: View {
 
     private var pictureSourceActionSheet: ActionSheet {
         ActionSheet(title: Text("Choose the source of picture"), buttons: [
-            .default(Text("Camera")),
-            .default(Text("Gallery")) { self.showImagePicker.toggle() },
+            .default(Text("Camera"))  { self.imageSource = .camera;       self.showImagePicker.toggle() },
+            .default(Text("Gallery")) { self.imageSource = .photoLibrary; self.showImagePicker.toggle() },
             .cancel(Text("Cancel")),
         ])
     }
@@ -47,17 +48,22 @@ struct ClothAdder: View {
     func saveData() {
         let cloth = Cloth(context: self.managedObjectContext)
         
-        cloth.id    = UUID()
-        cloth.label = self.label
-        cloth.brand = self.brand
-        cloth.color = self.color
-        cloth.type  = ClothType.types[self.typeIndex]
+        cloth.id        = UUID()
+        cloth.label     = self.label
+        cloth.brand     = self.brand
+        cloth.color     = self.color
+        cloth.type      = ClothType.types[self.typeIndex]
         cloth.imageData = self.image?.pngData() as NSData?
         
-        do {
-            try self.managedObjectContext.save()
-        } catch {
-            print("Tried to save cloth. Error: \(error)")
+//      BUG: I assume, it doesn't work. Consider finding the solution
+        DispatchQueue.global().async {
+            DispatchQueue.main.async {
+                do {
+                    try self.managedObjectContext.save()
+                } catch {
+                    print("Tried to save cloth. Error: \(error)")
+                }
+            }
         }
         
         self.presentationMode.wrappedValue.dismiss()
@@ -102,7 +108,7 @@ struct ClothAdder: View {
         }
         .actionSheet(isPresented: $showActionSheet) { self.pictureSourceActionSheet }
         .sheet(isPresented: self.$showImagePicker) {
-            ImagePicker(isShown: self.$showImagePicker, image: self.$image)
+            ImagePicker(isShown: self.$showImagePicker, image: self.$image, sourceType: self.imageSource!)
         }
     }
 }
