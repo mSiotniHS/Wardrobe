@@ -100,7 +100,7 @@ struct ClothAdder: View {
         }
         .actionSheet(isPresented: $showActionSheet) { self.pictureSourceActionSheet }
         .sheet(isPresented: self.$showImagePicker) {
-            ImagePickerWrapper(showImagePicker: self.$showImagePicker, image: self.$image)
+            ImagePicker(isShown: self.$showImagePicker, image: self.$image)
         }
     }
 }

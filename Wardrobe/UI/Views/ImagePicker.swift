@@ -8,15 +8,6 @@
 
 import SwiftUI
 
-struct ImagePickerWrapper: View {
-    @Binding var showImagePicker: Bool
-    @Binding var image          : Image?
-    
-    var body: some View {
-        ImagePicker(isShown: self.$showImagePicker, image: self.$image)
-    }
-}
-
 struct ImagePicker: UIViewControllerRepresentable {
     
     @Binding var isShown : Bool
@@ -32,7 +23,7 @@ struct ImagePicker: UIViewControllerRepresentable {
         return imagePicker
     }
 
-    func updateUIViewController(_ uiViewController: ImagePicker.UIViewControllerType, context: UIViewControllerRepresentableContext<ImagePicker>) {
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: UIViewControllerRepresentableContext<ImagePicker>) {
         
     }
 }
