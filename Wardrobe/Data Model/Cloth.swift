@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import SwiftUI
 
 public class Cloth: NSManagedObject, Identifiable {
     @NSManaged public var id        : UUID?
@@ -16,7 +17,11 @@ public class Cloth: NSManagedObject, Identifiable {
     @NSManaged public var brand     : String?
     @NSManaged var type             : String?
     @NSManaged public var color     : String?
-    @NSManaged var image            : NSData?
+    @NSManaged var imageData        : NSData?
+    
+    var image: Image {
+        Image(uiImage: UIImage(data: imageData! as Foundation.Data)!)
+    }
 }
 
 extension Cloth {

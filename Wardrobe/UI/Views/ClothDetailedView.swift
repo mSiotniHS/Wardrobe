@@ -14,11 +14,11 @@ struct ClothDetailedView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-//                Image(cloth.imageName)
-//                    .resizable()
-//                    .scaledToFill()
-//                    .clipped()
-//                    .listRowInsets(EdgeInsets())
+                self.cloth.image
+                    .resizable()
+                    .scaledToFill()
+                    .clipped()
+                    .listRowInsets(EdgeInsets())
                 Text(cloth.label!).font(.largeTitle)
                 Text("Brand: \(cloth.brand!)")
                 Text("Type: \(cloth.type!.description)")

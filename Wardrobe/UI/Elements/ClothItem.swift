@@ -13,6 +13,9 @@ struct ClothItem: View {
     
     var body: some View {
         HStack {
+            self.cloth.image
+                .resizable()
+                .frame(width: 90, height: 90)
             VStack(alignment: .leading) {
                 Text(cloth.label!)
                     .font(.headline)

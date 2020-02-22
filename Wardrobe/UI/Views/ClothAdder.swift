@@ -14,16 +14,17 @@ struct ClothAdder: View {
     
     var managedObjectContext: NSManagedObjectContext
     
-    @State private var label     = ""
-    @State private var brand     = ""
-    @State private var color     = ""
-    @State private var typeIndex = 0
-    @State private var imageName = ""
+    @State private var label     : String   = ""
+    @State private var brand     : String   = ""
+    @State private var color     : String   = ""
+    @State private var typeIndex : Int      = 0
+    @State private var image     : UIImage? = nil
     
     private var fieldsAreFilled: Bool {
         self.label != "" &&
         self.brand != "" &&
-        self.color != ""
+        self.color != "" &&
+        self.image != nil
     }
     
     private var dismissButton: some View {
@@ -32,9 +33,9 @@ struct ClothAdder: View {
         }
     }
     
-    @State private var showActionSheet : Bool   = false
-    @State private var showImagePicker : Bool   = false
-    @State private var image           : Image? = nil
+    @State private var showActionSheet : Bool     = false
+    @State private var showImagePicker : Bool     = false
+
     private var pictureSourceActionSheet: ActionSheet {
         ActionSheet(title: Text("Choose the source of picture"), buttons: [
             .default(Text("Camera")),
@@ -50,12 +51,13 @@ struct ClothAdder: View {
         cloth.label = self.label
         cloth.brand = self.brand
         cloth.color = self.color
-        cloth.type  = ClothType.types[typeIndex]
+        cloth.type  = ClothType.types[self.typeIndex]
+        cloth.imageData = self.image?.pngData() as NSData?
         
         do {
             try self.managedObjectContext.save()
         } catch {
-            print("Tried to save object. Error: \(error)")
+            print("Tried to save cloth. Error: \(error)")
         }
         
         self.presentationMode.wrappedValue.dismiss()
@@ -76,7 +78,7 @@ struct ClothAdder: View {
                     .pickerStyle(SegmentedPickerStyle())
                     Button(action: { self.showActionSheet.toggle() }) { Text(self.image == nil ? "Add photo" : "Change photo") }
                     if (self.image != nil) {
-                        self.image!
+                        Image(uiImage: self.image!)
                             .resizable()
                             .scaledToFit()
                     }
