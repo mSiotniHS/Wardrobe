@@ -12,6 +12,26 @@ import CoreData
 struct LooksView: View {
     var managedObjectContext: NSManagedObjectContext
     @FetchRequest(fetchRequest: Look.getAllLooks()) var looks: FetchedResults<Look>
+    @FetchRequest(fetchRequest: Cloth.getAllClothes()) var clothes: FetchedResults<Cloth>
+    
+    var addLookButton: some View {
+        Button(action: {
+//            TODO: IMPLEMENT
+//            let look = Look(context: self.managedObjectContext)
+//            look.id    = UUID()
+//            look.label = "Usual one"
+//            look.style = "usual"
+//            look.season = "warm"
+//            look.addToClothes(self.clothes[0])
+//
+//            do {
+//                try self.managedObjectContext.save()
+//            } catch {
+//                print("Tried to save look. Error: \(error)")
+//            }
+//
+        }) { Image(systemName: "plus.circle") }
+    }
     
     var body: some View {
         NavigationView {
@@ -21,8 +41,7 @@ struct LooksView: View {
                         LookItem(look: look)
                     }
                 }
-//                .onDelete(perform: <#T##Optional<(IndexSet) -> Void>##Optional<(IndexSet) -> Void>##(IndexSet) -> Void#>)
-            }
+            }.navigationBarItems(trailing: addLookButton)
         }
     }
 }

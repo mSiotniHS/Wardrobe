@@ -12,7 +12,16 @@ struct LookDetailedView: View {
     var look: Look
     
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ScrollView {
+            VStack {
+                Text("Label: \(look.label!)")
+                Text("Style: \(look.style!)")
+                Text("Season: \(look.season!)")
+                ForEach(Array(self.look.clothes!) as! Array<Cloth>) { cloth in
+                    Text("Contained cloth: \(cloth.label!)")
+                }
+            }
+        }
     }
 }
 
