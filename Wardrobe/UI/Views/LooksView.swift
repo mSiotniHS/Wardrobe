@@ -14,23 +14,15 @@ struct LooksView: View {
     @FetchRequest(fetchRequest: Look.getAllLooks()) var looks: FetchedResults<Look>
     @FetchRequest(fetchRequest: Cloth.getAllClothes()) var clothes: FetchedResults<Cloth>
     
+    @State var showAdder = false
+    
     var addLookButton: some View {
-        Button(action: {
-//            TODO: IMPLEMENT
-//            let look = Look(context: self.managedObjectContext)
-//            look.id    = UUID()
-//            look.label = "Usual one"
-//            look.style = "usual"
-//            look.season = "warm"
-//            look.addToClothes(self.clothes[0])
-//
-//            do {
-//                try self.managedObjectContext.save()
-//            } catch {
-//                print("Tried to save look. Error: \(error)")
-//            }
-//
-        }) { Image(systemName: "plus.circle") }
+        Button(action: { self.showAdder.toggle() }) {
+            Image(systemName: "plus.circle")
+                .imageScale(.large)
+                .accessibility(label: Text("Add cloth"))
+                .padding()
+        }
     }
     
     var body: some View {
@@ -41,7 +33,26 @@ struct LooksView: View {
                         LookItem(look: look)
                     }
                 }
-            }.navigationBarItems(trailing: addLookButton)
+                .onDelete(perform: deleteLook)
+            }
+            .navigationBarTitle(Text("Looks"))
+            .navigationBarItems(trailing: addLookButton)
+            .sheet(isPresented: self.$showAdder) {
+                LookAdder(managedObjectContext: self.managedObjectContext, clothes: self.clothes)
+            }
+        }
+    }
+    
+    private func deleteLook(at offsets: IndexSet) {
+        for index in offsets {
+            let look = looks[index]
+            self.managedObjectContext.delete(look)
+        }
+        
+        do {
+            try self.managedObjectContext.save()
+        } catch {
+            print("Tried to delete look. An error occured: \(error)")
         }
     }
 }

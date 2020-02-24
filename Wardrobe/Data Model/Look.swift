@@ -30,14 +30,19 @@ public class Look: NSManagedObject, Identifiable {
     public func addToClothes(_ value: Cloth) {
         self.mutableSetValue(forKey: "clothes").add(value)
     }
-    
-    // TODO: Deal with these
+
     @objc(removeClothObject:)
-    @NSManaged public func removeFromClothes(_ value: Cloth)
-    
+    public func removeFromClothes(_ value: Cloth) {
+        self.mutableSetValue(forKey: "clothes").remove(value)
+    }
+
     @objc(addClothes:)
-    @NSManaged public func addToClothes(_ values: NSSet)
-    
-    @objc(removeClothes:)
-    @NSManaged public func removeFromClothes(_ values: NSSet)
+    public func addAllClothes(_ values: [Cloth]) {
+        for value in values {
+            self.mutableSetValue(forKey: "clothes").add(value)
+        }
+    }
+
+//    @objc(removeClothes:)
+//    @NSManaged public func removeFromClothes(_ values: NSSet)
 }

@@ -13,6 +13,15 @@ struct LookItem: View {
     
     var body: some View {
         VStack {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(Array(self.look.clothes!) as! Array<Cloth>) { cloth in
+                        cloth.image
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                    }
+                }
+            }
             Text(look.label!)
             Text(look.style!)
             Text(look.season!)
