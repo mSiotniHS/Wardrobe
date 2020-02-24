@@ -36,6 +36,7 @@ struct LookAdder: View {
         }
     }
     
+//  BUG: Instead of Cloth.image, there is a blue square
     private var clothesPicker: some View {
         List {
             ForEach(self.clothes) { cloth in
