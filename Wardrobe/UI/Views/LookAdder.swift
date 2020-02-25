@@ -35,8 +35,7 @@ struct LookAdder: View {
             print("Error in saving look. Error: \(error)")
         }
     }
-    
-//  BUG: Instead of Cloth.image, there is a blue square
+
     private var clothesPicker: some View {
         List {
             ForEach(self.clothes) { cloth in

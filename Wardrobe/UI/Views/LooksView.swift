@@ -20,7 +20,7 @@ struct LooksView: View {
         Button(action: { self.showAdder.toggle() }) {
             Image(systemName: "plus.circle")
                 .imageScale(.large)
-                .accessibility(label: Text("Add cloth"))
+                .accessibility(label: Text("Add look"))
                 .padding()
         }
     }
