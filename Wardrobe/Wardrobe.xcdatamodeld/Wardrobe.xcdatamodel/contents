@@ -12,8 +12,8 @@
     <entity name="Look" representedClassName=".Look" syncable="YES">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="label" optional="YES" attributeType="String"/>
-        <attribute name="season" optional="YES" attributeType="String"/>
-        <attribute name="style" optional="YES" attributeType="String"/>
+        <attribute name="seasonIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="styleIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="clothes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Cloth" inverseName="looks" inverseEntity="Cloth"/>
     </entity>
     <elements>

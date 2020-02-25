@@ -15,8 +15,8 @@ struct LookDetailedView: View {
         ScrollView {
             VStack {
                 Text("Label: \(look.label!)")
-                Text("Style: \(look.style!)")
-                Text("Season: \(look.season!)")
+                Text("Style: \(look.style)")
+                Text("Season: \(look.season)")
                 ForEach(Array(self.look.clothes!) as! Array<Cloth>) { cloth in
                     Text("Contained cloth: \(cloth.label!)")
                 }

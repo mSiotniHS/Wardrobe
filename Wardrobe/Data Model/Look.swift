@@ -12,11 +12,21 @@ import CoreData
 public class Look: NSManagedObject, Identifiable {
     @NSManaged public var id      : UUID?
     
-    @NSManaged public var label   : String?
-    @NSManaged public var style   : String?
-    @NSManaged public var season  : String?
-    @NSManaged public var clothes : NSSet?
+    @NSManaged public var label       : String?
+    @NSManaged public var styleIndex  : NSNumber?
+    @NSManaged public var seasonIndex : NSNumber?
+    @NSManaged public var clothes     : NSSet?
     
+    var style: String {
+        LookStyles(rawValue: Int(exactly: self.styleIndex!)!)!.description
+    }
+    
+    var season: String {
+        LookSeasons(rawValue: Int(exactly: self.seasonIndex!)!)!.description
+    }
+}
+
+extension Look {
     static func getAllLooks() -> NSFetchRequest<Look> {
         let request: NSFetchRequest<Look> = Look.fetchRequest() as! NSFetchRequest<Look>
         
@@ -45,4 +55,32 @@ public class Look: NSManagedObject, Identifiable {
 
 //    @objc(removeClothes:)
 //    @NSManaged public func removeFromClothes(_ values: NSSet)
+}
+
+enum LookStyles: Int, CaseIterable, CustomStringConvertible {
+    case usual
+    case official
+    case festive
+    
+    var description: String {
+        switch self {
+        case .usual    : return "Usual"
+        case .official : return "Official"
+        case .festive  : return "Festive"
+        }
+    }
+}
+
+enum LookSeasons: Int, CaseIterable, CustomStringConvertible {
+    case summer
+    case winter
+    case demi
+    
+    var description: String {
+        switch self {
+        case .summer : return "Summer"
+        case .winter : return "Winter"
+        case .demi   : return "Demi-season"
+        }
+    }
 }

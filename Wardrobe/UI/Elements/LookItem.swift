@@ -23,8 +23,8 @@ struct LookItem: View {
                 }
             }
             Text(look.label!)
-            Text(look.style!)
-            Text(look.season!)
+            Text(look.style)
+            Text(look.season)
         }
     }
 }

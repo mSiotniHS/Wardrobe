@@ -16,17 +16,22 @@ struct LookAdder: View {
     var clothes              : FetchedResults<Cloth>
     
     @State private var label        : String = ""
-    @State private var style        : String = ""
-    @State private var season       : String = ""
+    @State private var styleIndex   : Int = 0
+    @State private var seasonIndex  : Int = 0
     @State private var chosenClothes: [Cloth] = []
+    
+    private var fieldsAreFilled: Bool {
+        self.label  != "" &&
+        !self.chosenClothes.isEmpty
+    }
 
     private func saveData() {
         let look = Look(context: self.managedObjectContext)
         
-        look.id    = UUID()
-        look.label = self.label
-        look.style = self.style
-        look.season = self.season
+        look.id          = UUID()
+        look.label       = self.label
+        look.styleIndex  = NSNumber(integerLiteral: self.styleIndex)
+        look.seasonIndex = NSNumber(integerLiteral: self.seasonIndex)
         look.addAllClothes(self.chosenClothes)
         
         do {
@@ -52,13 +57,29 @@ struct LookAdder: View {
         }
     }
     
+    private var dismissButton: some View {
+        Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+            Text("Cancel")
+        }
+    }
+    
     var body: some View {
         NavigationView {
             VStack {
                 Form {
                     TextField("Label", text: self.$label)
-                    TextField("Style", text: self.$style)
-                    TextField("Season", text: self.$season)
+                    Picker("Style", selection: self.$styleIndex) {
+                        ForEach(0 ..< LookStyles.allCases.count) { index in
+                            Text(LookStyles.allCases[index].description).tag(index)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    Picker("Season", selection: self.$seasonIndex) {
+                        ForEach(0 ..< LookSeasons.allCases.count) { index in
+                            Text(LookSeasons.allCases[index].description).tag(index)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
                     Text("Choose clothes:")
                     self.clothesPicker
                 }
@@ -69,10 +90,13 @@ struct LookAdder: View {
                         .foregroundColor(.white)
                         .padding()
                         .padding(EdgeInsets.init(top: 0, leading: 30, bottom: 0, trailing: 30))
-                        .background(Color.blue)
+                        .background(self.fieldsAreFilled ? Color.blue : Color.gray)
                         .cornerRadius(20)
                 }
+                .disabled(!self.fieldsAreFilled)
             }
+            .navigationBarTitle(Text("Add new look"), displayMode: .inline)
+            .navigationBarItems(leading: dismissButton)
         }
     }
 }
