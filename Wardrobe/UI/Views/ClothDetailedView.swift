@@ -8,21 +8,44 @@
 
 import SwiftUI
 
+struct ClothDetailedViewWrapper: View {
+    @Environment(\.editMode) var mode
+    
+    var cloth: Cloth
+    
+    var body: some View {
+        VStack {
+            if (self.mode?.wrappedValue == .inactive) {
+                ClothDetailedView(cloth: cloth)
+            } else {
+                ClothEditor()
+            }
+        }
+        .navigationBarTitle(Text(""), displayMode: .inline)
+        .navigationBarItems(trailing: EditButton())
+    }
+}
+
 struct ClothDetailedView: View {
     var cloth: Cloth
     
+    var paddingValue: CGFloat = 14.0
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 self.cloth.image
                     .resizable()
                     .scaledToFill()
-                    .clipped()
-                    .listRowInsets(EdgeInsets())
-                Text(cloth.label!).font(.largeTitle)
+                Text(cloth.label!).font(.largeTitle).bold()
+                    .padding(.leading, paddingValue)
+                    .padding(.trailing, paddingValue)
                 Text("Brand: \(cloth.brand!)")
+                    .padding(.leading, paddingValue)
+                    .padding(.trailing, paddingValue)
                 Text("Type: \(cloth.type)")
-                Text("UUID: \(cloth.id!)")
+                    .padding(.leading, paddingValue)
+                    .padding(.trailing, paddingValue)
             }
         }
     }

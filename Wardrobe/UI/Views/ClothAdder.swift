@@ -55,6 +55,7 @@ struct ClothAdder: View {
         VStack {
             HStack(alignment: .center) {
                 Text("Add new cloth")
+                    .font(.headline)
                     .bold()
             }
             .padding(EdgeInsets(top: 13.0, leading: 10.0, bottom: 0.0, trailing: 20.0))
