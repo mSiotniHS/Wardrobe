@@ -9,5 +9,6 @@
 import Foundation
 
 class Data: ObservableObject {
-    @Published var clothes: [Cloth] = []
+    @Published var clothes : [Cloth] = []
+    @Published var looks   : [Look]  = []
 }
