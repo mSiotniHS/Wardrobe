@@ -6,7 +6,7 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="label" optional="YES" attributeType="String"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
+        <attribute name="typeIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="looks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Look" inverseName="clothes" inverseEntity="Look"/>
     </entity>
     <entity name="Look" representedClassName=".Look" syncable="YES">

@@ -16,7 +16,9 @@ struct ClothItem: View {
             self.cloth.image
                 .resizable()
                 .renderingMode(.original)
+                .scaledToFill()
                 .frame(width: 90, height: 90)
+                .clipped()
             VStack(alignment: .leading) {
                 Text(cloth.label!)
                     .font(.headline)
