@@ -52,47 +52,44 @@ struct ClothAdder: View {
     }
     
     var body: some View {
-        VStack {
-            HStack(alignment: .center) {
-                Text("Add new cloth")
-                    .font(.headline)
-                    .bold()
-            }
-            .padding(EdgeInsets(top: 13.0, leading: 10.0, bottom: 0.0, trailing: 20.0))
-            
-            Form {
-                TextField("Label", text: self.$label)
-                TextField("Brand", text: self.$brand)
-                TextField("Color", text: self.$color)
-                Picker("Styles", selection: $typeIndex) { // BUG: when typing text, Picker is "blinking"
-                    ForEach(0 ..< ClothTypes.allCases.count) { index in
-                        Text(ClothTypes.allCases[index].description).tag(index)
+        NavigationView {
+            VStack {
+                Form {
+                    TextField("Label", text: self.$label)
+                    TextField("Brand", text: self.$brand)
+                    TextField("Color", text: self.$color)
+                    Picker("Styles", selection: $typeIndex) { // BUG: when typing text, Picker is "blinking"
+                        ForEach(0 ..< ClothTypes.allCases.count) { index in
+                            Text(ClothTypes.allCases[index].description).tag(index)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    
+                    Button(action: { self.showActionSheet.toggle() }) {
+                        Text(self.image == nil ? "Add photo" : "Change photo")
+                    }
+                    
+                    if (self.image != nil) {
+                        Image(uiImage: self.image!)
+                            .resizable()
+                            .scaledToFit()
                     }
                 }
-                .pickerStyle(SegmentedPickerStyle())
+                Spacer()
                 
-                Button(action: { self.showActionSheet.toggle() }) {
-                    Text(self.image == nil ? "Add photo" : "Change photo")
+                Button(action: { self.saveData() }) {
+                    Text("Add")
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding()
+                        .padding(EdgeInsets.init(top: 0, leading: 30, bottom: 0, trailing: 30))
+                        .background(fieldsAreFilled ? Color.blue : Color.gray)
+                        .cornerRadius(20)
                 }
-                
-                if (self.image != nil) {
-                    Image(uiImage: self.image!)
-                        .resizable()
-                        .scaledToFit()
-                }
+                .disabled(!fieldsAreFilled)
             }
-            Spacer()
-            
-            Button(action: { self.saveData() }) {
-                Text("Add")
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .padding()
-                    .padding(EdgeInsets.init(top: 0, leading: 30, bottom: 0, trailing: 30))
-                    .background(fieldsAreFilled ? Color.blue : Color.gray)
-                    .cornerRadius(20)
-            }
-            .disabled(!fieldsAreFilled)
+            .navigationBarTitle(Text("Add new cloth"), displayMode: .inline)
+            .navigationBarItems(leading: dismissButton)
         }
         .actionSheet(isPresented: $showActionSheet) { self.pictureSourceActionSheet }
         .sheet(isPresented: self.$showImagePicker) {
