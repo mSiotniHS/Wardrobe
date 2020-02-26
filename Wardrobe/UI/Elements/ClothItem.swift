@@ -15,10 +15,14 @@ struct ClothItem: View {
         HStack {
             self.cloth.image
                 .resizable()
+                .renderingMode(.original)
+                .scaledToFill()
                 .frame(width: 90, height: 90)
+                .clipped()
             VStack(alignment: .leading) {
                 Text(cloth.label!)
                     .font(.headline)
+                    .foregroundColor(.black)
                 Text(cloth.brand!)
                     .font(.subheadline)
                     .foregroundColor(.gray)

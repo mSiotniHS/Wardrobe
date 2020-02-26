@@ -34,39 +34,21 @@ struct ClothAdder: View {
         }
     }
     
-    @State private var showActionSheet : Bool     = false
-    @State private var showImagePicker : Bool     = false
+    @State private var showActionSheet : Bool = false
+    @State private var showImagePicker : Bool = false
 
     private var pictureSourceActionSheet: ActionSheet {
         ActionSheet(title: Text("Choose the source of picture"), buttons: [
-            .default(Text("Camera"))  { self.imageSource = .camera;       self.showImagePicker.toggle() },
-            .default(Text("Gallery")) { self.imageSource = .photoLibrary; self.showImagePicker.toggle() },
+            .default(Text("Camera"))  {
+                self.imageSource = .camera;
+                self.showImagePicker.toggle()
+            },
+            .default(Text("Gallery")) {
+                self.imageSource = .photoLibrary;
+                self.showImagePicker.toggle()
+            },
             .cancel(Text("Cancel")),
         ])
-    }
-    
-    func saveData() {
-        let cloth = Cloth(context: self.managedObjectContext)
-        
-        cloth.id        = UUID()
-        cloth.label     = self.label
-        cloth.brand     = self.brand
-        cloth.color     = self.color
-        cloth.type      = ClothType.types[self.typeIndex]
-        cloth.imageData = self.image?.pngData() as NSData?
-        
-//      BUG: I assume, it doesn't work. Consider finding the solution
-        DispatchQueue.global().async {
-            DispatchQueue.main.async {
-                do {
-                    try self.managedObjectContext.save()
-                } catch {
-                    print("Tried to save cloth. Error: \(error)")
-                }
-            }
-        }
-        
-        self.presentationMode.wrappedValue.dismiss()
     }
     
     var body: some View {
@@ -77,12 +59,16 @@ struct ClothAdder: View {
                     TextField("Brand", text: self.$brand)
                     TextField("Color", text: self.$color)
                     Picker("Styles", selection: $typeIndex) { // BUG: when typing text, Picker is "blinking"
-                        ForEach(0 ..< ClothType.types.count) { index in
-                            Text(ClothType.typesForHuman[index]).tag(index)
+                        ForEach(0 ..< ClothTypes.allCases.count) { index in
+                            Text(ClothTypes.allCases[index].description).tag(index)
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
-                    Button(action: { self.showActionSheet.toggle() }) { Text(self.image == nil ? "Add photo" : "Change photo") }
+                    
+                    Button(action: { self.showActionSheet.toggle() }) {
+                        Text(self.image == nil ? "Add photo" : "Change photo")
+                    }
+                    
                     if (self.image != nil) {
                         Image(uiImage: self.image!)
                             .resizable()
@@ -101,27 +87,37 @@ struct ClothAdder: View {
                         .cornerRadius(20)
                 }
                 .disabled(!fieldsAreFilled)
-                
             }
             .navigationBarTitle(Text("Add new cloth"), displayMode: .inline)
-            .navigationBarItems(trailing: dismissButton)
+            .navigationBarItems(leading: dismissButton)
         }
         .actionSheet(isPresented: $showActionSheet) { self.pictureSourceActionSheet }
         .sheet(isPresented: self.$showImagePicker) {
             ImagePicker(isShown: self.$showImagePicker, image: self.$image, sourceType: self.imageSource!)
         }
     }
-}
-
-struct ClothType {
-    static var types         : [String] = ["head", "body", "legs", "shoes"]
-    static var typesForHuman : [String] {
-        self.types.map { String($0.prefix(1)).uppercased() + $0.dropFirst() }
+    
+    private func saveData() {
+        let cloth = Cloth(context: self.managedObjectContext)
+                
+        cloth.id        = UUID()
+        cloth.label     = self.label
+        cloth.brand     = self.brand
+        cloth.color     = self.color
+        cloth.typeIndex = NSNumber(integerLiteral: self.typeIndex)
+        cloth.imageData = self.image?.pngData() as NSData?
+                
+//      BUG: I assume, it doesn't work. Consider finding the solution
+        DispatchQueue.global().async {
+            DispatchQueue.main.async {
+                do {
+                    try self.managedObjectContext.save()
+                } catch {
+                    print("Tried to save cloth. Error: \(error)")
+                }
+            }
+        }
+        
+        self.presentationMode.wrappedValue.dismiss()
     }
 }
-
-//struct ClothAdder_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ClothAdder()
-//    }
-//}
