@@ -24,6 +24,10 @@ public class Look: NSManagedObject, Identifiable {
     var season: String {
         LookSeasons(rawValue: Int(exactly: self.seasonIndex!)!)!.description
     }
+    
+    var clothesArray: [Cloth] {
+        Array(self.clothes!) as! Array<Cloth>
+    }
 }
 
 extension Look {
@@ -75,12 +79,14 @@ enum LookSeasons: Int, CaseIterable, CustomStringConvertible {
     case summer
     case winter
     case demi
+    case universal
     
     var description: String {
         switch self {
-        case .summer : return "Summer"
-        case .winter : return "Winter"
-        case .demi   : return "Demi-season"
+        case .summer    : return "Summer"
+        case .winter    : return "Winter"
+        case .demi      : return "Demi-season"
+        case .universal : return "Universal"
         }
     }
 }

@@ -19,9 +19,8 @@ struct LooksView: View {
     var addLookButton: some View {
         Button(action: { self.showAdder.toggle() }) {
             Image(systemName: "plus.circle")
-                .imageScale(.large)
                 .accessibility(label: Text("Add look"))
-                .padding()
+                .imageScale(.large)
         }
     }
     

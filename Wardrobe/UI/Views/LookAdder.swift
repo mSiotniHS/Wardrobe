@@ -34,10 +34,16 @@ struct LookAdder: View {
         look.seasonIndex = NSNumber(integerLiteral: self.seasonIndex)
         look.addAllClothes(self.chosenClothes)
         
-        do {
-            try self.managedObjectContext.save()
-        } catch {
-            print("Error in saving look. Error: \(error)")
+        // Neither does it. Consider finding the solution
+        DispatchQueue.main.async {
+            do {
+                try self.managedObjectContext.save()
+            } catch {
+                print("Error in saving look. Error: \(error)")
+            }
+            
+            self.presentationMode.wrappedValue.dismiss()
+            
         }
     }
 

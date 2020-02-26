@@ -12,19 +12,28 @@ struct LookItem: View {
     var look: Look
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
-                    ForEach(Array(self.look.clothes!) as! Array<Cloth>) { cloth in
+                    ForEach(look.clothesArray) { cloth in
                         cloth.image
                             .resizable()
-                            .frame(width: 100, height: 100)
+                            .renderingMode(.original)
+                            .scaledToFill()
+                            .frame(width: 100, height: 100, alignment: .center)
+                            .clipped()
                     }
                 }
             }
             Text(look.label!)
+                .font(.title)
+                .bold()
+                .foregroundColor(.black)
             Text(look.style)
-            Text(look.season)
+                .font(.headline)
+            Text("Season: \(look.season)")
+                .font(.subheadline)
+                .foregroundColor(.gray)
         }
     }
 }
